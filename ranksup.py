@@ -2,6 +2,7 @@
 
 import os
 from sys import platform
+import time
 
 # Create <clear> function
 clear = None
@@ -40,7 +41,8 @@ class Game:
     """ Main Game Logic
     """
     def __init__(self):
-        player = Player()
+        self.player = Player()
+        self.crypt = Crypt()
 
     def check_data_file(self):
         """ Check data file. When exists returns True, else False.
@@ -51,7 +53,16 @@ class Game:
         return False
 
     def save_data_file(self):
-        pass
+        # Формат: "key:value|key:value"
+        text = "key:value"
+        with open("data.bin", "w") as f:
+            f.write(self.crypt.encrypt(text))
+
+    def load_data_file(self):
+        with open("data.bin", "r") as f:
+            text = self.crypt.decrypt(f.read()) # Строка из "key:value|key:value"
+        text_lines = text.strip("|") # Список из "key:value"
+        
 
     def welcome(self):
         """ Send to player welcome message.
@@ -80,10 +91,12 @@ class Game:
     def start(self, new=False):
         if (new):
             self.welcome()
-            player.name = input("Введи своё имя, рядовой: ")
+            self.player.name = input("Введи своё имя, рядовой: ")
         else:
             self.welcome()
             print("Добро пожаловать, " + name + "!")
+        self.save_data_file()
+        self.load_data_file()
 
 
 
