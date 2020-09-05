@@ -2,7 +2,7 @@
 
 import os
 from sys import platform
-
+import time
 # Create <clear> function
 clear = None
 if platform == "win32" :
@@ -40,7 +40,7 @@ class Game:
     """ Main Game Logic
     """
     def __init__(self):
-        player = Player()
+        self.player = Player()
 
     def check_data_file(self):
         """ Check data file. When exists returns True, else False.
@@ -80,7 +80,7 @@ class Game:
     def start(self, new=False):
         if (new):
             self.welcome()
-            player.name = input("Введи своё имя, рядовой: ")
+            self.player.name = input("Введи своё имя, рядовой: ")
         else:
             self.welcome()
             print("Добро пожаловать, " + name + "!")
