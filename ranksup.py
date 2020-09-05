@@ -1,8 +1,9 @@
-# Version 1.0.0
+# Version 1.0.1
 
 import os
 from sys import platform
 import time
+
 # Create <clear> function
 clear = None
 if platform == "win32" :
@@ -41,6 +42,7 @@ class Game:
     """
     def __init__(self):
         self.player = Player()
+        self.crypt = Crypt()
 
     def check_data_file(self):
         """ Check data file. When exists returns True, else False.
@@ -51,7 +53,16 @@ class Game:
         return False
 
     def save_data_file(self):
-        pass
+        # Формат: "key:value|key:value"
+        text = "key:value"
+        with open("data.bin", "w") as f:
+            f.write(self.crypt.encrypt(text))
+
+    def load_data_file(self):
+        with open("data.bin", "r") as f:
+            text = self.crypt.decrypt(f.read()) # Строка из "key:value|key:value"
+        text_lines = text.strip("|") # Список из "key:value"
+        
 
     def welcome(self):
         """ Send to player welcome message.
@@ -84,6 +95,8 @@ class Game:
         else:
             self.welcome()
             print("Добро пожаловать, " + name + "!")
+        self.save_data_file()
+        self.load_data_file()
 
 
 
